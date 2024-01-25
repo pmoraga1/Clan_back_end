@@ -1,0 +1,11 @@
+{
+  "name": "backend_proyecto5",
+  "version": "0.1.0",
+  "description": "Back Proyecto Clan",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Diego Pizarro, José Valdés, Sebastián Aburto, Paulina Moraga",
+  "license": "ISC"
+}
