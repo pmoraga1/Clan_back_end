@@ -7,5 +7,13 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Diego Pizarro, José Valdés, Sebastián Aburto, Paulina Moraga",
-  "license": "ISC"
+  "license": "ISC",
+  "keywords": [
+    "express",
+    "mongoose",
+    "mongodb"
+  ],
+  "dependencies": {
+    "mongoose": "^8.1.1"
+  }
 }
