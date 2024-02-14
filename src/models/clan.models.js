@@ -1,16 +1,18 @@
-const mongoose = require ('mongoose')
-const clanScheme = {
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
+const clanSchema = new Schema({
     id:{
         type: String,
         required: true,
         unique: true
     },
-    nombreAdmin: {
+    usuarioAdmin: {
         type: String,
         required: true,
         trim: true,
-        minlength: 2
+        match:  [/.+\@.+\..+/]
     },
+    
     fechaCreacion:{
         type: Date,
         required: true
@@ -28,11 +30,21 @@ const clanScheme = {
     },
     plataformaClan:{
         type: String,
+        enum: ['Netflix', 'HBO Max', 'Disney +', 
+        'Spotify', 'Youtube Premium'],
         required: true
+    },
+    usuariosClan:[{
+        type: String,
+    }],
+    strikes:[{
+        type: String
+    }],
+    estadoClan:{
+
     }
-    
+})
 
+const Clan = mongoose.model("Clan", clanSchema)
 
-}
-
-const Clan = mongoose.model("Clan", )
+module.exports = {Clan}

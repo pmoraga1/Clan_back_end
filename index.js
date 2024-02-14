@@ -2,7 +2,7 @@
 // IMPORTACIONES
 const EXPRESS = require("express");
 const {connectDB} = require("./src/config/database/connectDB.js")
-const { clanRouter } = require("./src/routes/clan.routers.js");
+const { clanRouter } = require("./src/routes/clan.routes.js");
 require("dotenv").config();
 
 // INSTANCIAS
