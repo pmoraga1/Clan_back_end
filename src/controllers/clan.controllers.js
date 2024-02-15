@@ -1,4 +1,4 @@
-const { encrypt, compareEncryptedData } = require("../helpers/encrypt.js");
+const { encrypt} = require("../helpers/encrypt.js");
 const {Clan} = require("../models/clan.model.js");
 const { User } = require("../models/user.model.js");
 
