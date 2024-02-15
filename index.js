@@ -10,7 +10,7 @@ const cors = require("cors");
 
 // INSTANCIAS
 const app = EXPRESS();
-const PUERTO = process.env.PUERTO;
+const PUERTO = process.env.PORT;
 connectDB()
 
 // MIDDLEWARES
