@@ -3,9 +3,9 @@ const {Clan} = require("../models/clan.model.js");
 const { User } = require("../models/user.model.js");
 
 const createClan = async (req,res) => {
-    const { admin, usuarioCredencialesClan, contrasenaClan, plataformaClan } = req.body;
-    if (!admin || !usuarioCredencialesClan || !contrasenaClan || !plataformaClan ) {
-        return res.status(403).json({ error: "Complete los campos admin, usuarioCredencialesClan, plataformaClan"});
+    const { admin, usuarioCredencialesClan, contrasenaClan, plataformaClan, cuposClan, estadoClan } = req.body;
+    if (!admin || !usuarioCredencialesClan || !contrasenaClan || !plataformaClan || !cuposClan || !estadoClan) {
+        return res.status(403).json({ error: "Complete los campos admin, usuarioCredencialesClan, plataformaClan, cuposClan y estadoClan"});
        }
     try {
         const adminUser = await User.findOne({ correo: admin.toLowerCase()});
@@ -19,7 +19,9 @@ const createClan = async (req,res) => {
           admin: adminUser._id,
           usuarioCredencialesClan: usuarioCredencialesClan,
           hashContrasenaClan: hashedContrasenaClan,
-          plataformaClan: plataformaClan
+          plataformaClan: plataformaClan,
+          cuposClan: cuposClan,
+          estadoClan: estadoClan
     });
         await nuevoClan.save();
      return  res.status(201).json({
@@ -44,6 +46,31 @@ const editClan = () => {
   
 }
 
+const addMember = async (req, res) => {
+  const {clanId, userId} = req.body;
+  try {
+    if (!clanId ||  userId) {
+      return res.status(403).json({ error: "Complete los campos clanId y userId"})
+    }
+    const clan = await Clan.findById(clanId)
+
+    
+    const updatedClan = await Clan.findByIdAndUpdate(clanId, {$push: {miembros: userId }}, {new:true});
+    if (!updatedClan) {
+      return res.status(404).json({ mensaje: "Clan no encontrado" });
+    }
+   return res.status(200).json({ mensaje: "Miembro añadido correctamente", clan: updatedClan });
+
+  }  catch (error) {
+  console.error("Error al añadir miembro al clan:", error);
+  return res.status(500).json({ mensaje: "Error servidor al añadir miembro al clan" });
+}
+};
+  
+
+const deleteMember = () => {
+  
+}
 const deleteClan = async (req,res) =>{
     const {clanId} = req.body
     try {
@@ -59,7 +86,13 @@ const deleteClan = async (req,res) =>{
     }
 }
 
+const editCredentials = () => {
+}
+
+const deleteCredentials = () => {
+}
+
 const getClan = () => {
 }
 
-module.exports = {createClan, editClan, deleteClan, getClan}
+module.exports = {createClan, editClan, deleteClan, getClan, addMember, deleteMember, editCredentials, deleteCredentials}

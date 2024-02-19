@@ -39,7 +39,24 @@ const clanSchema = new Schema ({
     miembros: [{
         type: Schema.Types.ObjectId,
         ref: 'User'
-    }]
+    }],
+
+    clanCompleto: {
+        type: Boolean,
+        default: false
+    },
+
+    cuposClan: {
+        type: Number,
+        required: true
+    },
+
+    estadoClan: {
+        type: String,
+        enum: ["publico", "privado"],
+        required: true
+      },
+
     
 })
 
