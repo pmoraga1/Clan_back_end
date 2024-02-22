@@ -6,14 +6,14 @@ const { auth } = require("../middlewares/auth.js");
 
 userRouter.post("/register",registerUser);
 
-userRouter.patch("/edit",auth, editUser);
+userRouter.patch("/edit/:id",auth,editUser);
 
-userRouter.delete("/delete", auth ,deleteUser);
+userRouter.delete("/delete/:id",auth,deleteUser);
 
 userRouter.get("/get",auth,getUserByEmail);
 
 userRouter.post("/login",logInUser);
 
-userRouter.patch("/strikes",strikesUserById);
+userRouter.patch("/strikes",auth,strikesUserById);
 
 module.exports = { userRouter };
