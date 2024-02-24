@@ -16,7 +16,11 @@ const accountSchema = new Schema({
     required: true,
   },
   detalles: {
-    type: Object, // Puedes ajustar el tipo según los detalles específicos de la cuenta
+    type: Object, 
+    required: true,
+  },
+  imagenUrl: {
+    type: String,
     required: true,
   },
 });

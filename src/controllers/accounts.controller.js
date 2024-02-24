@@ -4,8 +4,8 @@ const Account = require("../models/accounts.model");
 //Crear una cuenta
 const createSharedAccount = async (req, res) => {
   try {
-    const { nombreCuenta, precio, numUsuarios, detalles } = req.body;
-    const newAccount = new Account({ nombreCuenta, precio, numUsuarios, detalles });
+    const { nombreCuenta, precio, numUsuarios, detalles, imagenUrl } = req.body;
+    const newAccount = new Account({ nombreCuenta, precio, numUsuarios, detalles, imagenUrl });
     const savedAccount = await newAccount.save();
     res.status(201).json(savedAccount);
   } catch (error) {
@@ -14,15 +14,16 @@ const createSharedAccount = async (req, res) => {
   }
 };
 
+
 //Editar una cuenta
 
 const editSharedAccount = async (req, res) => {
   try {
     const accountId = req.params.id;
-    const { nombreCuenta, precio, numUsuarios, detalles } = req.body;
+    const { nombreCuenta, precio, numUsuarios, detalles, imagenUrl } = req.body;
     const updatedAccount = await Account.findByIdAndUpdate(
       accountId,
-      { nombreCuenta, precio, numUsuarios, detalles },
+      { nombreCuenta, precio, numUsuarios, detalles, imagenUrl },
       { new: true }
     );
     res.status(200).json(updatedAccount);
@@ -43,12 +44,22 @@ const getAllAccounts = async (req, res) => {
   }
 };
 
+//Ver una sola cuenta por ID
+
+const getAccountById = async (req, res) => {
+  const {id} = req.params
+  try {
+    const account = await Account.findById(id);
+    res.json(account);
+  } catch (error) {
+    res.status(500).json({ error: "Error al obtener la cuenta" });
+  }
+}
+
 
 module.exports = {
   createSharedAccount,
   editSharedAccount,
   getAllAccounts,
+  getAccountById,
 };
-
-
-
