@@ -4,7 +4,6 @@ const {registerUser,editUser,deleteUser,getUserByEmail,logInUser,strikesUserById
 const { auth } = require("../middlewares/auth.js");
 
 
-
 userRouter.post("/register",registerUser);
 
 userRouter.patch("/edit/:id",auth,editUser);

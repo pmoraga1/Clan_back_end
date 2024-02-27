@@ -1,20 +1,19 @@
 const express = require('express')
 const clanRouter = express.Router()
-const {createClan, editClan, deleteClan, getClan, addMember, deleteMember, editCredentials, deleteCredentials} = require("../controllers/clan.controllers.js")
+const {createClan, deleteClan, getClan, addMember, deleteMember, editCredentials, deleteCredentials} = require("../controllers/clan.controllers.js")
+const { auth } = require("../middlewares/auth.js")
 
-clanRouter.post("/create", createClan)
+clanRouter.post("/create", auth, createClan)
 
-clanRouter.patch("/edit", editClan)
+clanRouter.patch("/addmember", auth, addMember)
 
-clanRouter.patch("/addmember", addMember)
+clanRouter.patch("/deletemember", auth, deleteMember)
 
-clanRouter.patch("/deletemember", deleteMember)
+clanRouter.patch("/editcredentials", auth, editCredentials)
 
-clanRouter.patch("/editcredentials", editCredentials)
+clanRouter.patch("/deletecredentials/:clanId", auth, deleteCredentials)
 
-clanRouter.patch("/deletecredentials", deleteCredentials)
-
-clanRouter.delete("/delete", deleteClan)
+clanRouter.delete("/delete/:clanId", auth, deleteClan)
 
 clanRouter.get("/get", getClan)
 

@@ -1,98 +1,234 @@
-const { encrypt} = require("../helpers/encrypt.js");
-const {Clan} = require("../models/clan.model.js");
+const { encrypt } = require("../helpers/encrypt.js");
+const { Clan } = require("../models/clan.model.js");
 const { User } = require("../models/user.model.js");
 
-const createClan = async (req,res) => {
-    const { admin, usuarioCredencialesClan, contrasenaClan, plataformaClan, cuposClan, estadoClan } = req.body;
-    if (!admin || !usuarioCredencialesClan || !contrasenaClan || !plataformaClan || !cuposClan || !estadoClan) {
-        return res.status(403).json({ error: "Complete los campos admin, usuarioCredencialesClan, plataformaClan, cuposClan y estadoClan"});
-       }
-    try {
-        const adminUser = await User.findOne({ correo: admin.toLowerCase()});
+const createClan = async (req, res) => {
+  const { admin, usuarioCredencialesClan, contrasenaClan, plataformaClan, cuposClan, estadoClan } = req.body;
+  if (!admin || !usuarioCredencialesClan || !contrasenaClan || !plataformaClan || !cuposClan || !estadoClan) {
+    return res.status(403).json({ error: "Complete los campos admin, usuarioCredencialesClan, plataformaClan, cuposClan y estadoClan" });
+  }
+  try {
+    const adminUser = await User.findOne({ correo: admin.toLowerCase() });
 
-        if (!adminUser) {
-            return res.status(404).json({ mensaje: "El administrador especificado no existe" });
-        }
-
-        const hashedContrasenaClan = await encrypt(contrasenaClan);
-        const nuevoClan = new Clan({
-          admin: adminUser._id,
-          usuarioCredencialesClan: usuarioCredencialesClan,
-          hashContrasenaClan: hashedContrasenaClan,
-          plataformaClan: plataformaClan,
-          cuposClan: cuposClan,
-          estadoClan: estadoClan
-    });
-        await nuevoClan.save();
-     return  res.status(201).json({
-        mensaje: "Registro de Clan exitoso",
-        status: "OK",
-      });
-    } catch (error) {
-      console.log(error);
-      if (error.code === 11000) {
-      return res.status(403).json({ 
-          mensaje: "Clan ya existe, por favor ingrese otro",
-        });
-        
-      }
-     return res.status(500).json({
-        mensaje: "ERROR DE SERVIDOR",
-      });
+    if (!adminUser) {
+      return res.status(404).json({ mensaje: "El administrador especificado no existe" });
     }
+
+    const hashedContrasenaClan = await encrypt(contrasenaClan);
+    const nuevoClan = new Clan({
+      admin: adminUser._id,
+      usuarioCredencialesClan: usuarioCredencialesClan,
+      hashContrasenaClan: hashedContrasenaClan,
+      plataformaClan: plataformaClan,
+      cuposClan: cuposClan,
+      estadoClan: estadoClan
+    });
+    await nuevoClan.save();
+    return res.status(201).json({
+      mensaje: "Registro de Clan exitoso",
+      status: "OK",
+    });
+  } catch (error) {
+    console.log(error);
+    if (error.code === 11000) {
+      return res.status(403).json({
+        mensaje: "Clan ya existe, por favor ingrese otro",
+      });
+
+    }
+    return res.status(500).json({
+      mensaje: "ERROR DE SERVIDOR",
+    });
+  }
 };
 
-const editClan = () => {
-  
-}
 
 const addMember = async (req, res) => {
-  const {clanId, userId} = req.body;
+  const { clanId, userId } = req.body;
   try {
-    if (!clanId ||  userId) {
-      return res.status(403).json({ error: "Complete los campos clanId y userId"})
+    if (!clanId || !userId) {
+      return res.status(403).json({ 
+        error: "Complete los campos clanId y userId" 
+      })
     }
     const clan = await Clan.findById(clanId)
 
-    
-    const updatedClan = await Clan.findByIdAndUpdate(clanId, {$push: {miembros: userId }}, {new:true});
-    if (!updatedClan) {
-      return res.status(404).json({ mensaje: "Clan no encontrado" });
+    if (clan.clanCompleto) {
+      return res.status(403).json({ 
+        error: "El clan está completo, no hay cupos disponibles" 
+      });
     }
-   return res.status(200).json({ mensaje: "Miembro añadido correctamente", clan: updatedClan });
 
-  }  catch (error) {
-  console.error("Error al añadir miembro al clan:", error);
-  return res.status(500).json({ mensaje: "Error servidor al añadir miembro al clan" });
-}
+    else {
+      clan.miembros.push(userId)
+
+      if (clan.miembros.length === clan.cuposClan) {
+        clan.clanCompleto = true
+      }
+
+      await clan.save();
+
+      return res.status(200).json({ 
+        mensaje: "Miembro añadido correctamente",
+        clan 
+      });
+    }
+  }
+
+
+  catch (error) {
+    console.error("Error al añadir miembro al clan:", error);
+    return res.status(500).json({ 
+      mensaje: "Error servidor al añadir miembro al clan" 
+    });
+  }
 };
-  
 
-const deleteMember = () => {
-  
-}
-const deleteClan = async (req,res) =>{
-    const {clanId} = req.body
-    try {
-        const clan = await Clan.findByIdAndDelete(clanId);
-        if (!clan){
-        return res.status(404).json({ mensaje: "Clan no encontrado" });
+const deleteMember = async (req, res) => {
+  const {clanId, userId} = req.body;
+  try {
+    if (!clanId || !userId) {
+      return res.status(403).json({ error: "Complete los campos clanId y userId" })
     }
-    return res.status(200).json({ mensaje: "Clan eliminado correctamente" });
-
-    } catch (error){
-        console.error("Error al eliminar el clan:", error);
-        return res.status(500).json({ mensaje: "Error servidor al eliminar el clan" });
+    const clan = await Clan.findById(clanId)
+    if (!clan){
+      return res.status(404).json({ error: 
+        "Clan no encontrado"
+      })
     }
+    if (!clan.miembros.includes(userId)) {
+      return res.status(404).json({ 
+        error: "El usuario no es miembro de este clan" 
+      });
+    }
+
+    clan.miembros.pull(userId);
+
+    await clan.save();
+
+    return res.status(200).json({ 
+      mensaje: "Miembro eliminado correctamente del clan" 
+    });
+}
+catch(error) {
+  console.error("Error al añadir miembro al clan:", 
+  error
+  );
+  return res.status(500).json({ 
+    mensaje: "Error servidor al añadir miembro al clan" 
+  });
+}
 }
 
-const editCredentials = () => {
+const deleteClan = async (req, res) => {
+  const { clanId } = req.params;
+  try {
+    const clan = await Clan.findByIdAndDelete(clanId);
+    if (!clan) {
+      return res.status(404).json({ 
+        mensaje: "Clan no encontrado" 
+      });
+    }
+    return res.status(200).json({ 
+      mensaje: "Clan eliminado correctamente" 
+    });
+
+  } catch (error) {
+    console.error("Error al eliminar el clan:", 
+    error
+    );
+    return res.status(500).json({ 
+      mensaje: "Error servidor al eliminar el clan" 
+    });
+  }
 }
 
-const deleteCredentials = () => {
+const editCredentials = async (req, res) => {
+  const { clanId, usuarioCredencialesClan, contrasenaClan } = req.body
+  try {
+    if (!clanId || !usuarioCredencialesClan || !contrasenaClan) {
+      return res.status(400).json({ 
+        error: "Complete los campos clanId, usuarioCredencialesClan y contrasenaClan" 
+      });
+    }
+
+    const clan = await Clan.findById(clanId);
+    if (!clan) {
+      return res.status(404).json({ 
+        error: "Clan no encontrado" 
+      });
+    }
+
+    clan.usuarioCredencialesClan = usuarioCredencialesClan;
+    clan.hashContrasenaClan = await encrypt(contrasenaClan);
+
+    await clan.save();
+
+    return res.status(200).json({ mensaje: "Credenciales del clan actualizadas correctamente" });
+
+  } catch (error) {
+    console.error("Error al editar las credenciales del clan:", error);
+    return res.status(500).json({ 
+      mensaje: "Error del servidor al editar credenciales" 
+    });
+  }
+
 }
 
-const getClan = () => {
+const deleteCredentials = async (req, res) => {
+  const {clanId} = req.params;
+  try {
+    const clan = await Clan.findById(clanId);
+    if(!clan){
+      return res.status(404).json({
+        mensaje: "Clan no encontrado"
+      });
+    }
+    clan.usuarioCredencialesClan = null;
+    clan.hashContrasenaClan = null;
+  
+    await clan.save();
+    return res.status(200).json({
+      mensaje: "Credenciales eliminadas correctamente"
+    })
+  }
+  catch (error) {
+    console.error("Error al eliminar las credenciales:", error);
+    return res.status(500).json({ 
+      mensaje: "Error del servidor al eliminar credenciales" });
+  }
 }
 
-module.exports = {createClan, editClan, deleteClan, getClan, addMember, deleteMember, editCredentials, deleteCredentials}
+const getClan = async (req, res) => {
+  const {clanId} = req.params;
+  try {
+    const clan = await Clan.findById(clanId)
+    if(!clan){
+      return res.status(404).json({
+        mensaje: "Clan no encontrado"
+      });
+    }
+    return res.status(200).json({  
+      mensaje: "Clan encontrado", 
+      data: clan 
+    });
+  }
+  catch (error) {
+    console.error("Error al obtener el clan:", 
+    error
+    );
+    return res.status(500).json({ 
+      mensaje: "Error de servidor al obtener el clan" 
+    });
+  }
+}
+
+module.exports = { 
+  createClan, 
+  deleteClan, 
+  getClan, 
+  addMember, 
+  deleteMember, 
+  editCredentials, 
+  deleteCredentials 
+}
