@@ -9,7 +9,7 @@ clanRouter.patch("/addmember", auth, addMember)
 
 clanRouter.patch("/deletemember", auth, deleteMember)
 
-clanRouter.patch("/editcredentials", editCredentials)
+clanRouter.patch("/editcredentials", auth, editCredentials)
 
 clanRouter.patch("/deletecredentials/:clanId", auth, deleteCredentials)
 

@@ -14,5 +14,6 @@ router.get("/getAllAccounts", accountsController.getAllAccounts);
 // Ruta para obtener una sola cuenta por ID
 router.get("/getAccountById/:id", accountsController.getAccountById);
 
+router.delete("/deleteAccount/:id", accountsController.deleteAccount);
 
 module.exports = router;
