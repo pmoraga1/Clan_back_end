@@ -84,7 +84,6 @@ const addMember = async (req, res) => {
   }
 };
 
-
 const deleteMember = async (req, res) => {
   const {clanId, userId} = req.body;
   try {
@@ -110,8 +109,6 @@ const deleteMember = async (req, res) => {
     return res.status(200).json({ 
       mensaje: "Miembro eliminado correctamente del clan" 
     });
-
-
 }
 catch(error) {
   console.error("Error al añadir miembro al clan:", 
@@ -123,9 +120,8 @@ catch(error) {
 }
 }
 
-
 const deleteClan = async (req, res) => {
-  const { clanId } = req.body
+  const { clanId } = req.params;
   try {
     const clan = await Clan.findByIdAndDelete(clanId);
     if (!clan) {
@@ -179,10 +175,8 @@ const editCredentials = async (req, res) => {
 
 }
 
-
-
 const deleteCredentials = async (req, res) => {
-  const {clanId} = req.body;
+  const {clanId} = req.params;
   try {
     const clan = await Clan.findById(clanId);
     if(!clan){
@@ -219,8 +213,6 @@ const getClan = async (req, res) => {
       data: clan 
     });
   }
-  
-
   catch (error) {
     console.error("Error al obtener el clan:", 
     error
@@ -231,4 +223,12 @@ const getClan = async (req, res) => {
   }
 }
 
-module.exports = { createClan, deleteClan, getClan, addMember, deleteMember, editCredentials, deleteCredentials }
+module.exports = { 
+  createClan, 
+  deleteClan, 
+  getClan, 
+  addMember, 
+  deleteMember, 
+  editCredentials, 
+  deleteCredentials 
+}
