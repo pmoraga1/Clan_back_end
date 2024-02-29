@@ -170,6 +170,7 @@ const getUserByEmail = async (req, res) => {
   }
 };
 
+
 const logInUser = async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {

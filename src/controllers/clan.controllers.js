@@ -212,7 +212,9 @@ const getClan = async (req, res) => {
     }
     return res.status(200).json({  
       mensaje: "Clan encontrado", 
-      data: clan 
+      data: { 
+        clan,
+      }
     });
   }
   catch (error) {

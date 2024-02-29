@@ -15,6 +15,6 @@ clanRouter.patch("/deletecredentials/:clanId", auth, deleteCredentials)
 
 clanRouter.delete("/delete/:clanId", auth, deleteClan)
 
-clanRouter.get("/get", getClan)
+clanRouter.get("/get/:clanId", getClan)
 
 module.exports = {clanRouter};

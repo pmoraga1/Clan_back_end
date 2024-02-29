@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+
+
 const userSchema = new Schema ( {
   nombreCompleto: {
     type: String,
@@ -69,9 +71,11 @@ const userSchema = new Schema ( {
 
   administradorde: [
     {
-      clanID: Schema.Types.ObjectId,
-    //   ref: "Clan",
-    },
+      clanID: {
+        type: Schema.Types.ObjectId,
+        ref: 'Clan'
+      }
+     },
   ],
 
   username: {
