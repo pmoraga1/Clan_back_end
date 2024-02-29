@@ -76,33 +76,33 @@ const strikesUserById = async (req, res) => {
 const editUser = async (req, res) => {
   const { id } = req.params;
   console.log("estoy imprimiendo el id", id);
-  const { nombreCompleto, contrasena } = req.body;
-  console.log(
-    "estoy imprimiendo nombreCompleto, contrasena",
-    nombreCompleto,
-    contrasena
-  );
+  
+  // console.log(
+  //   "estoy imprimiendo nombreCompleto, contrasena",
+  //   nombreCompleto,
+  //   contrasena
+  // );
 
-  if (!nombreCompleto) {
-    return res.status(403).json({ error: "Complete el campo nombreCompleto" });
-  }
+  // if (!nombreCompleto) {
+  //   return res.status(403).json({ error: "Complete el campo nombreCompleto" });
+  // }
 
   try {
-    const user = await User.findById(id);
+    const user = await User.findByIdAndUpdate(id,req.body,{new:true});
 
-    if (!user) {
-      return res.status(404).json({
-        mensaje: "Usuario con este id no existe",
-      });
-    }
+    // if (!user) {
+    //   return res.status(404).json({
+    //     mensaje: "Usuario con este id no existe",
+    //   });
+    // }
 
-    if (contrasena) {
-      const hashedPassword = await encrypt(contrasena);
-      user.hashContrasena = hashedPassword;
-    }
+    // if (contrasena) {
+    //   const hashedPassword = await encrypt(contrasena);
+    //   user.hashContrasena = hashedPassword;
+    // }
 
-    user.nombreCompleto = nombreCompleto;
-    await user.save();
+    // user.nombreCompleto = nombreCompleto;
+    // await user.save();
 
     return res.status(200).json({
       mensaje: "Usuario actualizado correctamente",
