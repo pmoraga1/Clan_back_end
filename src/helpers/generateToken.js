@@ -7,8 +7,8 @@ const generarPrimerToken = () => {
     return token
 }
 
-const generateUserToken = ({nombreCompleto, correo, rol, username, historialClanes, miembrode, administradorde }) => {
-    const token = jwt.sign({nombreCompleto, correo, rol, username, historialClanes, miembrode, administradorde},secret)
+const generateUserToken = ({nombreCompleto, correo, rol, username, historialClanes, miembrode, administradorde, _id }) => {
+    const token = jwt.sign({nombreCompleto, correo, rol, username, historialClanes, miembrode, administradorde,_id},secret)
     return token
 }
 
