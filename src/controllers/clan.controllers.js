@@ -23,6 +23,8 @@ const createClan = async (req, res) => {
       cuposClan: cuposClan,
       estadoClan: estadoClan
     });
+    adminUser.administradorde.push(nuevoClan._id)
+    await User.findByIdAndUpdate(adminUser._id, adminUser)
     await nuevoClan.save();
     return res.status(201).json({
       mensaje: "Registro de Clan exitoso",
