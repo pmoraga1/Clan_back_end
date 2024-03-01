@@ -50,7 +50,7 @@ const clanSchema = new Schema ({
         required: true
     },
 
-    estadoClan: {
+    tipoClan: {
         type: String,
         enum: ["publico", "privado"],
         required: true

@@ -3,9 +3,9 @@ const { Clan } = require("../models/clan.model.js");
 const { User } = require("../models/user.model.js");
 
 const createClan = async (req, res) => {
-  const { admin, usuarioCredencialesClan, contrasenaClan, plataformaClan, cuposClan, estadoClan } = req.body;
-  if (!admin || !usuarioCredencialesClan || !contrasenaClan || !plataformaClan || !cuposClan || !estadoClan) {
-    return res.status(403).json({ error: "Complete los campos admin, usuarioCredencialesClan, plataformaClan, cuposClan y estadoClan" });
+  const { admin, usuarioCredencialesClan, contrasenaClan, plataformaClan, cuposClan, tipoClan } = req.body;
+  if (!admin || !usuarioCredencialesClan || !contrasenaClan || !plataformaClan || !cuposClan || !tipoClan) {
+    return res.status(403).json({ error: "Complete los campos admin, usuarioCredencialesClan, plataformaClan, cuposClan y tipoClan" });
   }
   try {
     const adminUser = await User.findOne({ correo: admin.toLowerCase() });
