@@ -25,9 +25,8 @@ const clanSchema = new Schema ({
     },
 
     plataformaClan:{
-        type: String,
-        enum: ["Netflix", "HBO Max", "Disney +", "Spotify", "Youtube Premium"],
-        required: true
+        type: Schema.Types.ObjectId,
+        ref: 'Account'
     },
 
     estadoClan: {
