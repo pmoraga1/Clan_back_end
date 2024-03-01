@@ -32,7 +32,7 @@ const clanSchema = new Schema ({
     estadoClan: {
         type: String,
         enum: ["activo", "inactivo"],
-        default: "inactivo",
+        default: "activo",
       },
 
     miembros: [{

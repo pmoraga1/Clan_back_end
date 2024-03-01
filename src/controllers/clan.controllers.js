@@ -21,7 +21,7 @@ const createClan = async (req, res) => {
       hashContrasenaClan: hashedContrasenaClan,
       plataformaClan: plataformaClan,
       cuposClan: cuposClan,
-      estadoClan: estadoClan
+      tipoClan: tipoClan
     });
     adminUser.administradorde.push(nuevoClan._id)
     await User.findByIdAndUpdate(adminUser._id, adminUser)
