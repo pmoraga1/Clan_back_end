@@ -64,8 +64,9 @@ const userSchema = new Schema ( {
 
   miembrode: [
     {
-      clanID: Schema.Types.ObjectId,
-    //   ref: "Clan",
+      clanID: Schema.Types.ObjectId
+      //default: 0
+      //ref: "Clan"
     },
   ],
 

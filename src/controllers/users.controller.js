@@ -21,6 +21,7 @@ const registerUser = async (req, res) => {
       correo: correo,
       hashContrasena: hashedPassword,
       username: generateUserName(),
+      miembrode: []
     });
     const token = generateUserToken(nuevoUsuario);
     await nuevoUsuario.save();
@@ -170,6 +171,32 @@ const getUserByEmail = async (req, res) => {
   }
 };
 
+const getUserById = async (req, res) => {
+  const {userId} = req.params;
+  try {
+    const user = await User.findById(userId)
+    if(!user){
+      return res.status(404).json({
+        mensaje: "Usuario no encontrado"
+      });
+    }
+    return res.status(200).json({  
+      mensaje: "Usuario encontrado", 
+      data: { 
+        user,
+      }
+    });
+  }
+  catch (error) {
+    console.error("Error al obtener el usuario", 
+    error
+    );
+    return res.status(500).json({ 
+      mensaje: "Error de servidor al obtener el usuario" 
+    });
+  }}
+
+
 
 const logInUser = async (req, res) => {
   const { email, password } = req.body;
@@ -215,4 +242,5 @@ module.exports = {
   getUserByEmail,
   logInUser,
   strikesUserById,
+  getUserById
 };

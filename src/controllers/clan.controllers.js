@@ -54,6 +54,8 @@ const addMember = async (req, res) => {
       })
     }
     const clan = await Clan.findById(clanId)
+    const memberUser = await User.findOne({ _id: userId})
+
 
     if (clan.clanCompleto) {
       return res.status(403).json({ 
@@ -63,6 +65,8 @@ const addMember = async (req, res) => {
 
     else {
       clan.miembros.push(userId)
+      memberUser.miembrode.push(clan._id)
+      await User.findByIdAndUpdate(memberUser._id, memberUser)
 
       if (clan.miembros.length === clan.cuposClan) {
         clan.clanCompleto = true
