@@ -1,42 +1,41 @@
-const mercadopago = require ("mercadopago")
-const  { MercadoPagoConfig } = require ('mercadopago') 
+// SDK de Mercado Pago
+const { MercadoPagoConfig, Preference } = require('mercadopago');
+// Agrega credenciales
 const client = new MercadoPagoConfig({ accessToken: process.env.ACCESS_TOKEN });
+const mercadopago = require ("mercadopago")
 const {Account} = require ('../models/accounts.model.js')
 const {Clan} = require ('../models/clan.model.js')
-
 
 
 const preferencesMercadoPago = async (req, res) => {
   const { clanId, precio } = req.body;
 
   if (!clanId || !precio) {
-    return res.status(403).json({ error: "Complete clanId, precio" });
+    return res.status(403).json({ error: "Complete clanId y precio" });
   }
 
   try {
-    const preference = new mercadopago.Preference();
-
-    preference.create({
-      items: [
-        {
-          title: clanId,
-          unit_price: parseFloat(precio),
-          quantity: 1,
-        },
-      ],
+    const preference = new Preference(client)
+    const respuesta = await preference.create  ({
+      body:{
+        items: [
+          {
+            title: clanId,
+            unit_price: parseInt(precio),
+            currency_id: "CLP",
+            quantity: 1
+          },
+        ],
+      }
     })
-      .then((response) => {
-        res.json({
-          id: response.body.id,
-        });
-      })
-      .catch((error) => {
-        console.error("Error creating Mercado Pago preference:", error);
-        res.status(500).json({ error: "Error creating Mercado Pago preference" });
-      });
+console.log(respuesta)
+    res.json({
+      id: respuesta.id,
+      init_point: respuesta.init_point
+    })
 
   } catch (error) {
-    console.error("Error in preferencesMercadoPago:", error);
+    console.error("Error en preferencesMercadoPago:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
