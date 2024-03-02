@@ -26,6 +26,11 @@ const preferencesMercadoPago = async (req, res) => {
             quantity: 1
           },
         ],
+        back_urls: {
+          failure: "https://devclanproject.netlify.app/PagoFallido",
+          pending: "https://devclanproject.netlify.app/PagoPendiente",
+          success: "https://devclanproject.netlify.app/PagoExitoso",
+        },
       }
     })
 console.log(respuesta)
