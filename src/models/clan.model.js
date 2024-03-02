@@ -1,64 +1,63 @@
-const mongoose = require ('mongoose')
-const Schema = mongoose.Schema
-const clanSchema = new Schema ({
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+const clanSchema = new Schema({
+  admin: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
 
-    admin: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true,
+  fechaCreacion: {
+    type: Date,
+    default: Date.now,
+  },
+
+  usuarioCredencialesClan: {
+    type: String,
+    required: true,
+    lowercase: true,
+  },
+
+  hashContrasenaClan: {
+    type: String,
+    required: true,
+  },
+
+  plataformaClan: {
+    type: Schema.Types.ObjectId,
+    ref: "Account",
+  },
+
+  estadoClan: {
+    type: String,
+    enum: ["activo", "inactivo"],
+    default: "activo",
+  },
+
+  miembros: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "User",
     },
+  ],
 
-    fechaCreacion:{
-        type: Date,
-        default: Date.now
-    },
+  clanCompleto: {
+    type: Boolean,
+    default: false,
+  },
 
-    usuarioCredencialesClan:{
-        type: String,
-        required: true,
-        lowercase: true
-    },
+  cuposClan: {
+    type: Number,
+    required: true,
+  },
 
-    hashContrasenaClan:{
-        type: String,
-        required: true,
-    },
+  tipoClan: {
+    type: String,
+    enum: ["publico", "privado"],
+    required: true,
+  },
+});
 
-    plataformaClan:{
-        type: Schema.Types.ObjectId,
-        ref: 'Account'
-    },
+const Clan = mongoose.model("Clan", clanSchema);
 
-    estadoClan: {
-        type: String,
-        enum: ["activo", "inactivo"],
-        default: "activo",
-      },
-
-    miembros: [{
-        type: Schema.Types.ObjectId,
-        ref: 'User'
-    }],
-
-    clanCompleto: {
-        type: Boolean,
-        default: false
-    },
-
-    cuposClan: {
-        type: Number,
-        required: true
-    },
-
-    tipoClan: {
-        type: String,
-        enum: ["publico", "privado"],
-        required: true
-      },
-
-    
-})
-
-const Clan = mongoose.model("Clan", clanSchema)
-
-module.exports = {Clan}
+module.exports = { Clan };

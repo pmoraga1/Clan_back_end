@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-
-const userSchema = new Schema ( {
+const userSchema = new Schema({
   nombreCompleto: {
     type: String,
     required: true,
@@ -31,7 +30,7 @@ const userSchema = new Schema ( {
   fechaNacimiento: {
     type: Date,
   },
-  
+
   rol: {
     type: String,
     enum: ["usuario", "admin"],
@@ -46,25 +45,25 @@ const userSchema = new Schema ( {
     type: Date,
     default: Date.now,
   },
-  
+
   historialClanes: [
     {
       clanID: Schema.Types.ObjectId,
-    //   ref: "Clan",
+      //   ref: "Clan",
     },
   ],
   preferencias: [{ type: String }],
-  
-  strikes: { 
+
+  strikes: {
     type: Number,
     default: 0,
     min: 0,
-    max: 3
+    max: 3,
   },
 
   miembrode: [
     {
-      clanID: Schema.Types.ObjectId
+      clanID: Schema.Types.ObjectId,
       //default: 0
       //ref: "Clan"
     },
@@ -74,18 +73,16 @@ const userSchema = new Schema ( {
     {
       clanID: {
         type: Schema.Types.ObjectId,
-        ref: 'Clan'
-      }
-     },
+        ref: "Clan",
+      },
+    },
   ],
 
   username: {
-    type: String
+    type: String,
   },
-
-
 });
 // en mongoose.model("aqui va el nombre de la coleccion o del modelo","esquema")
-const User = mongoose.model("User",userSchema);
+const User = mongoose.model("User", userSchema);
 
-module.exports = {User}
+module.exports = { User };

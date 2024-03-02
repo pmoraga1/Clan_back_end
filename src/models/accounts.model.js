@@ -16,7 +16,7 @@ const accountSchema = new Schema({
     required: true,
   },
   detalles: {
-    type: Object, 
+    type: Object,
     required: true,
   },
   imagenUrl: {

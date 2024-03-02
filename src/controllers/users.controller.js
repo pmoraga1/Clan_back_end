@@ -8,11 +8,9 @@ const { generateUserName } = require("../helpers/generateUserName.js");
 const registerUser = async (req, res) => {
   const { nombreCompleto, correo, contrasena } = req.body;
   if (!nombreCompleto || !correo || !contrasena) {
-    return res
-      .status(403)
-      .json({
-        error: "Complete los campos nombreCompleto, correo, contrasena",
-      });
+    return res.status(403).json({
+      error: "Complete los campos nombreCompleto, correo, contrasena",
+    });
   }
   try {
     const hashedPassword = await encrypt(contrasena);
@@ -21,7 +19,7 @@ const registerUser = async (req, res) => {
       correo: correo,
       hashContrasena: hashedPassword,
       username: generateUserName(),
-      miembrode: []
+      miembrode: [],
     });
     const token = generateUserToken(nuevoUsuario);
     await nuevoUsuario.save();
@@ -77,7 +75,7 @@ const strikesUserById = async (req, res) => {
 const editUser = async (req, res) => {
   const { id } = req.params;
   console.log("estoy imprimiendo el id", id);
-  
+
   // console.log(
   //   "estoy imprimiendo nombreCompleto, contrasena",
   //   nombreCompleto,
@@ -89,7 +87,7 @@ const editUser = async (req, res) => {
   // }
 
   try {
-    const user = await User.findByIdAndUpdate(id,req.body,{new:true});
+    const user = await User.findByIdAndUpdate(id, req.body, { new: true });
 
     // if (!user) {
     //   return res.status(404).json({
@@ -117,7 +115,6 @@ const editUser = async (req, res) => {
   }
 };
 
-
 const deleteUser = async (req, res) => {
   const { id } = req.params;
 
@@ -130,7 +127,6 @@ const deleteUser = async (req, res) => {
       });
     }
 
-  
     return res.status(200).json({
       mensaje: "Usuario eliminado correctamente",
     });
@@ -141,9 +137,6 @@ const deleteUser = async (req, res) => {
     });
   }
 };
-
-
-
 
 const getUserByEmail = async (req, res) => {
   const { correo } = req.body;
@@ -172,31 +165,27 @@ const getUserByEmail = async (req, res) => {
 };
 
 const getUserById = async (req, res) => {
-  const {id} = req.params;
+  const { id } = req.params;
   try {
-    const user = await User.findById(id)
-    if(!user){
+    const user = await User.findById(id);
+    if (!user) {
       return res.status(404).json({
-        mensaje: "Usuario no encontrado"
+        mensaje: "Usuario no encontrado",
       });
     }
-    return res.status(200).json({  
-      mensaje: "Usuario encontrado", 
-      data: { 
+    return res.status(200).json({
+      mensaje: "Usuario encontrado",
+      data: {
         user,
-      }
+      },
+    });
+  } catch (error) {
+    console.error("Error al obtener el usuario", error);
+    return res.status(500).json({
+      mensaje: "Error de servidor al obtener el usuario",
     });
   }
-  catch (error) {
-    console.error("Error al obtener el usuario", 
-    error
-    );
-    return res.status(500).json({ 
-      mensaje: "Error de servidor al obtener el usuario" 
-    });
-  }}
-
-
+};
 
 const logInUser = async (req, res) => {
   const { email, password } = req.body;
@@ -242,5 +231,5 @@ module.exports = {
   getUserByEmail,
   logInUser,
   strikesUserById,
-  getUserById
+  getUserById,
 };
