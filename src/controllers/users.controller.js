@@ -172,9 +172,9 @@ const getUserByEmail = async (req, res) => {
 };
 
 const getUserById = async (req, res) => {
-  const {userId} = req.params;
+  const {id} = req.params;
   try {
-    const user = await User.findById(userId)
+    const user = await User.findById(id)
     if(!user){
       return res.status(404).json({
         mensaje: "Usuario no encontrado"
